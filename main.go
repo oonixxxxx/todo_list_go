@@ -79,11 +79,11 @@ func addTask() {
 		return
 	}
 
-	task := Task(
+	task := Task{
 		ID: nextID,
-		Text: string,
-		Done: false
-	)
+		Text: text,
+		Done: false,
+	}
 
 	tasks = append(tasks, task)
 	nextID++
