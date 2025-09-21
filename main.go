@@ -5,19 +5,19 @@ import (
 	"strings"
 )
 
-//Task представляет одну задачу
+// Task представляет одну задачу
 type Task struct {
-	ID int //Уникальный ID для каждой задачи
-	Text string //Текст задачи
-	Desc string //Описание задачи
-	Done bool //Значеине выполнения задачи или невыполнения
+	ID   int    // Уникальный ID для каждой задачи
+	Text string // Текст задачи
+	Desc string // Описание задачи (не используется в текущей реализации)
+	Done bool   // Значение выполнения задачи
 }
 
-//Список всех задач
+// создаем список всех задач
 var tasks []Task
 var nextID = 1
 
-func main () {
+func main() {
 	for {
 		fmt.Println("\n=== ПРОСТОЙ TO-DO LIST ===")
 		fmt.Println("1. Посмотреть задачи")
@@ -28,11 +28,11 @@ func main () {
 		fmt.Print("Выберите действие: ")
 
 		var choice int
-		fmt.Println(choice)
+		fmt.Scanln(&choice) 
 
 		switch choice {
 		case 1:
-			viewTasks()
+			viewTask()
 		case 2:
 			addTask()
 		case 3:
@@ -44,7 +44,6 @@ func main () {
 			return
 		default:
 			fmt.Println("Неверный выбор!")
-			
 		}
 	}
 }
@@ -55,32 +54,35 @@ func viewTask() {
 		return
 	}
 
-	fmt.Println("\n ==== Ваши задачи ====")
+	fmt.Println("\n==== Ваши задачи ====")
 
 	for _, task := range tasks {
-			status := " "
+		status := " " 
 
-			if task.Done {
-				status = "done!"
-			}
+		if task.Done {
+			status = "✓" // Улучшено отображение статуса
+		} else {
+			status = " " // Пустой квадрат для невыполненных задач
+		}
 
-			fmt.Printf("%d. [%s] %s\n", task.ID, status, task.Text)
+		fmt.Printf("%d. [%s] %s\n", task.ID, status, task.Text)
 	}
 }
 
-//Добавить новую задачу
+// Добавить новую задачу
 func addTask() {
-	fmt.Println("Введите задачу: ")
-	var text string 
-	fmt.Println(&text)
+	fmt.Print("Введите задачу: ") 
+	var text string
+	fmt.Scanln(&text) 
 
+	text = strings.TrimSpace(text) // Добавлено: убираем лишние пробелы
 	if text == "" {
-		fmt.Println("Задача  не может быть пустой")
+		fmt.Println("Задача не может быть пустой")
 		return
 	}
 
 	task := Task{
-		ID: nextID,
+		ID:   nextID,
 		Text: text,
 		Done: false,
 	}
@@ -108,39 +110,36 @@ func toggleTask() {
 
 			status := "Выполнена"
 			if !tasks[i].Done {
-				status := "Невыполнена"
+				status = "Невыполнена"
 			}
 
-			fmt.Printf("Задача отменина как %s!\n", status)
+			fmt.Printf("Задача отмечена как %s!\n", status)
 			return
 		}
 	}
 
-
-	println("Задача не найдена")
+	fmt.Println("Задача не найдена")
 }
 
-
-//Удалить задачу
+// Удалить задачу
 func deleteTask() {
 	viewTask()
 	if len(tasks) == 0 {
-		println("Список задач пуст")
+		fmt.Println("Список задач пуст")
 		return
 	}
 
-	fmt.Print("Введите номер задачи для удаления")
+	fmt.Print("Введите номер задачи для удаления: ") // Добавлено двоеточие для единообразия
 	var id int
 	fmt.Scanln(&id)
 
 	for i, task := range tasks {
 		if task.ID == id {
-			//Удаляем задачу из slice
-			tasks = append(tasks[:i], tasks[i + 1:]...)
+			// Удаляем задачу из slice
+			tasks = append(tasks[:i], tasks[i+1:]...)
 			fmt.Println("Задача удалена")
-			return 
+			return
 		}
 	}
 	fmt.Println("Задача не найдена")
 }
-
